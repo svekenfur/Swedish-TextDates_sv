@@ -123,10 +123,14 @@ say $shortday.get-day-name-short_sv; # --> ons
 
 =head1 DESCRIPTION
 
-TextDates_sv transform the digits in a date or the weekday number to the Swedish text equivalent. 
+TextDates_sv transforms the digits in a date or the weekday number to the Swedish text equivalent. 
 If an invalid date or day of week is provided, for example 2017-02-31, TextDates_sv will print a message to C<$*ERR> and exit.
 
 =head1 INSTALLATION
+
+With zef:
+
+K<zef install https://github.com/svekenfur/Swedish-TextDates_sv.git> 
 
 =head1 USAGE
 
@@ -134,7 +138,7 @@ See the B<SYNOPSIS> above, that is pretty much all of it.
 
 =head1 BUGS
 
-TextDates_sv has only been tested on a machine with MS Windows 7 and Rakudo 2017.04.3. To report bugs or request features, please use I<Contact information is yet to come>.
+TextDates_sv has only been tested on a machine with MS Windows 7 and Rakudo 2017.04.3. To report bugs or request features, please use https://github.com/svekenfur/Swedish-TextDates_sv/issues.
 
 =head1 AUTHOR
 
