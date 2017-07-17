@@ -1,17 +1,17 @@
 # TextDates_sv.pm6
-# 2017-07-15
-# Transform a date or a weekday to the text equivalent in Swedish.
+# Transforms a date or a day of week to the text equivalent in Swedish.
 #
 
-unit module TextDates_sv:ver<0.0.4>:auth<Sverre Furberg (skf@sverro.se)>;
+unit module TextDates_sv:ver<0.1.0>:auth<Sverre Furberg (skf@sverro.se)>;
 
 # The names of weekdays, months and day of months in Swedish.
-my @day_name_sv = <måndag tisdag onsdag torsdag fredag lördag söndag>;
-my @day_name_short_sv = <mån tis ons tors fre lör sön>;
+# The beginning '0' in every array is just there to occupy the first index (@array[0]).
+my @day_name_sv = <0 måndag tisdag onsdag torsdag fredag lördag söndag>;
+my @day_name_short_sv = <0 mån tis ons tors fre lör sön>;
 my @month_name_sv = 
-        <januari februari mars april maj juni juli augusti september november december>;
+        <0 januari februari mars april maj juni juli augusti september november december>;
 my @day_of_month_name_sv = 
-        <första andra tredje fjärde femte sjätte sjunde åttonde nionde
+        <0 första andra tredje fjärde femte sjätte sjunde åttonde nionde
         tionde elfte tolfte trettonde fjortonde femtonde sextonde sjuttonde
         artonde nittonde tjugonde tjugoförsta tjugoandra tjugotredje
         tjugofjärde tjugofemte tjugosjätte tjugosjunde tjugoåttonde
@@ -24,12 +24,12 @@ class Day-Of-Week-Name_sv is export {
 
     method get-day-name_sv {
         day-check ($!day_of_week_number);
-        @day_name_sv[--$!day_of_week_number];
+        @day_name_sv[$!day_of_week_number];
     }
 
     method get-day-name-short_sv {
         day-check ($!day_of_week_number);
-        @day_name_short_sv[--$!day_of_week_number];
+        @day_name_short_sv[$!day_of_week_number];
     }
 }
 
@@ -48,7 +48,7 @@ class Whole-Date-Names_sv is export {
         my Int $month_nr = $!month_number.Int;
         my Int $day_of_month_nr = $!day_of_month_number.Int;
         day-of-month-check $day_of_month_nr, $month_nr, $year;
-        return $year, @month_name_sv[--$month_nr], @day_of_month_name_sv[--$day_of_month_nr];
+        return $year, @month_name_sv[$month_nr], @day_of_month_name_sv[$day_of_month_nr];
     }
 }
 
@@ -123,20 +123,25 @@ say $shortday.get-day-name-short_sv; # --> ons
 
 =head1 DESCRIPTION
 
-TextDates_sv transform the digits in a date or the weekday number to the Swedish text equivalent. If an invalid date or day of week is provided, for example 2017-02-31, TextDates_sv will give a message and exit.
+TextDates_sv transform the digits in a date or the weekday number to the Swedish text equivalent. 
+If an invalid date or day of week is provided, for example 2017-02-31, TextDates_sv will print a message to C<$*ERR> and exit.
 
 =head1 INSTALLATION
 
 =head1 USAGE
-See the SYNOPSIS above, that is about all of it.
+
+See the B<SYNOPSIS> above, that is pretty much all of it.
 
 =head1 BUGS
-TextDates_sv has only been tested on a machine with MS Windows 7 and Rakudo 2017.04.3. To report bugs or request features, please use skf@sverro.se.
+
+TextDates_sv has only been tested on a machine with MS Windows 7 and Rakudo 2017.04.3. To report bugs or request features, please use I<Contact information is yet to come>.
 
 =head1 AUTHOR
+
 Sverre Furberg
 
 =head1 LICENCE
+
 You can use and distribute this module under the terms of the The Artistic License 2.0.
 
 =end pod
