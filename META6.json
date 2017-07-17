@@ -6,7 +6,7 @@
     "authors" : [ "Sverre Furberg" ],
     "license" : "Artistic-2.0",
     "provides" : {
-        "Swedish::TextDates_sv" : "Swedish/TextDates_sv.pm6"
+        "Swedish::TextDates_sv" : "Swedish/TextDates_sv/lib/TextDates_sv.pm6"
     },
     "depends" : [ ],
     "resources" : [ ],
