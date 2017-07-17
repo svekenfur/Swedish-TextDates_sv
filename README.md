@@ -6,7 +6,7 @@ TextDates_sv
 SYNOPSIS
 ========
 
-    use TextDates_sv;
+    use Swedish::TextDates_sv;
 
     # Lets pretend that todays date is 2017-07-12.
     # First the date.
