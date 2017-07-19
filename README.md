@@ -8,16 +8,16 @@ SYNOPSIS
 
     use Swedish::TextDates_sv;
 
-    # Lets pretend that todays date is 2017-07-12.
-    # First the date.
+    # Let us pretend that todays date is 2017-07-12.
+    # First the date:
     my $date = Whole-Date-Names_sv.new(whole_date => DateTime.now.yyyy-mm-dd);
     say $date.date-to-text; # --> (2017 juli tolfte) 
 
-    # Now the day of week.
+    # Day of week.
     my $day = Day-Of-Week-Name_sv.new(day_of_week_number => DateTime.now.day-of-week);
     say $day.get-day-name_sv; # --> onsdag 
 
-    # At last the day in week in short form.
+    # Day in week in short form.
     my $shortday = Day-Of-Week-Name_sv.new(day_of_week_number => DateTime.now.day-of-week);
     say $shortday.get-day-name-short_sv; # --> ons
 
