@@ -2,20 +2,20 @@
 # Transforms a date or a day of week to the text equivalent in Swedish.
 #
 
-unit module TextDates_sv:ver<0.1.0>:auth<Sverre Furberg (skf@sverro.se)>;
+unit module TextDates_sv:ver<0.1.1>:auth<Sverre Furberg (skf@sverro.se)>;
 
 # The names of weekdays, months and day of months in Swedish.
 # The beginning '0' in every array is just there to occupy the first index (@array[0]).
-my @day_name_sv = <0 måndag tisdag onsdag torsdag fredag lördag söndag>;
-my @day_name_short_sv = <0 mån tis ons tors fre lör sön>;
-my @month_name_sv = 
-        <0 januari februari mars april maj juni juli augusti september november december>;
-my @day_of_month_name_sv = 
-        <0 första andra tredje fjärde femte sjätte sjunde åttonde nionde
-        tionde elfte tolfte trettonde fjortonde femtonde sextonde sjuttonde
-        artonde nittonde tjugonde tjugoförsta tjugoandra tjugotredje
-        tjugofjärde tjugofemte tjugosjätte tjugosjunde tjugoåttonde
-        tjugonionde trettionde trettioförsta>;
+enum day_name_sv <<:måndag(1) tisdag onsdag torsdag fredag lördag söndag>>;
+enum day_name_short_sv <<:mån(1) tis ons tors fre lör sön>>;
+enum month_name_sv 
+        <<:januari(1) februari mars april maj juni juli augusti september november december>>;
+enum day_of_month_name_sv 
+        <<:första(1) andra tredje fjärde femte sjätte sjunde åttonde nionde 
+        tionde elfte tolfte trettonde fjortonde femtonde sextonde sjuttonde 
+        artonde nittonde tjugonde tjugoförsta tjugoandra tjugotredje 
+        tjugofjärde tjugofemte tjugosjätte tjugosjunde tjugoåttonde 
+        tjugonionde trettionde trettioförsta>>;
 
 # Transform the digit of a day of week to 
 # the corresponding Swedish weekday.
@@ -24,12 +24,12 @@ class Day-Of-Week-Name_sv is export {
 
     method get-day-name_sv {
         day-check ($!day_of_week_number);
-        @day_name_sv[$!day_of_week_number];
+        day_name_sv($!day_of_week_number);
     }
 
     method get-day-name-short_sv {
         day-check ($!day_of_week_number);
-        @day_name_short_sv[$!day_of_week_number];
+        day_name_short_sv($!day_of_week_number);
     }
 }
 
@@ -44,11 +44,9 @@ class Whole-Date-Names_sv is export {
 
     method date-to-text {
         ($!year, $!month_number, $!day_of_month_number) = split('-', $!whole_date);
-        my Int $year = $!year.Int;
-        my Int $month_nr = $!month_number.Int;
-        my Int $day_of_month_nr = $!day_of_month_number.Int;
-        day-of-month-check $day_of_month_nr, $month_nr, $year;
-        return $year, @month_name_sv[$month_nr], @day_of_month_name_sv[$day_of_month_nr];
+        month-check $!month_number.Int;
+        day-of-month-check $!day_of_month_number.Int, $!month_number.Int, $!year.Int;
+        return $!year.Int, month_name_sv($!month_number.Int), day_of_month_name_sv($!day_of_month_number.Int);
     }
 }
 
@@ -71,7 +69,7 @@ sub day-check (Int $d_nr) {
 }
 
 # Is the day-of-month number valid?
-# The more data sent, the better is the check of validity.
+# The more data sent, the better the check of validity will be.
 sub day-of-month-check (Int $dom_nr, Int $m_nr?, Int $y?) {
     my $dom_max = 31;
     # The first index in @m_lenght is not a month, hence the zero.
@@ -106,16 +104,16 @@ TextDates_sv
 =begin code
 use Swedish::TextDates_sv;
 
-# Lets pretend that todays date is 2017-07-12.
-# First the date.
+# Let us pretend that todays date is 2017-07-12.
+# First the date:
 my $date = Whole-Date-Names_sv.new(whole_date => DateTime.now.yyyy-mm-dd);
 say $date.date-to-text; # --> (2017 juli tolfte) 
 
-# Now the day of week.
+# Day of week:
 my $day = Day-Of-Week-Name_sv.new(day_of_week_number => DateTime.now.day-of-week);
 say $day.get-day-name_sv; # --> onsdag 
 
-# At last the day in week in short form.
+# Day of week in short form:
 my $shortday = Day-Of-Week-Name_sv.new(day_of_week_number => DateTime.now.day-of-week);
 say $shortday.get-day-name-short_sv; # --> ons
 
