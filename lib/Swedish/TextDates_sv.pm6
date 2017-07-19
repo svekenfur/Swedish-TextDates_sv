@@ -5,7 +5,6 @@
 unit module TextDates_sv:ver<0.1.1>:auth<Sverre Furberg (skf@sverro.se)>;
 
 # The names of weekdays, months and day of months in Swedish.
-# The beginning '0' in every array is just there to occupy the first index (@array[0]).
 enum day_name_sv <<:måndag(1) tisdag onsdag torsdag fredag lördag söndag>>;
 enum day_name_short_sv <<:mån(1) tis ons tors fre lör sön>>;
 enum month_name_sv 
