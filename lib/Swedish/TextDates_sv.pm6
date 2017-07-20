@@ -1,20 +1,25 @@
 # TextDates_sv.pm6
-# Transforms a date or a day of week to the text equivalent in Swedish.
+# Transforms a date (yyyy-mm-dd) or a day of week to the text equivalent in Swedish.
 #
 
-unit module TextDates_sv:ver<0.1.1>:auth<Sverre Furberg (skf@sverro.se)>;
+unit module TextDates_sv:ver<0.1.2>:auth<Sverre Furberg (skf@sverro.se)>;
 
 # The names of weekdays, months and day of months in Swedish.
 enum day_name_sv <<:måndag(1) tisdag onsdag torsdag fredag lördag söndag>>;
 enum day_name_short_sv <<:mån(1) tis ons tors fre lör sön>>;
 enum month_name_sv 
-        <<:januari(1) februari mars april maj juni juli augusti september november december>>;
+        <<:januari(1) februari mars april maj juni juli augusti september oktober november december>>;
 enum day_of_month_name_sv 
         <<:första(1) andra tredje fjärde femte sjätte sjunde åttonde nionde 
         tionde elfte tolfte trettonde fjortonde femtonde sextonde sjuttonde 
         artonde nittonde tjugonde tjugoförsta tjugoandra tjugotredje 
         tjugofjärde tjugofemte tjugosjätte tjugosjunde tjugoåttonde 
         tjugonionde trettionde trettioförsta>>;
+
+# For now it has to be an array, otherwise conflict with 'enum month_name_sv'.
+# Ugly but what to do? ;-)
+my @month_name_short_sv =
+        <<0 jan feb mars apr maj juni juli aug sept okt nov dec>>;
 
 # Transform the digit of a day of week to 
 # the corresponding Swedish weekday.
@@ -34,18 +39,26 @@ class Day-Of-Week-Name_sv is export {
 
 # Transform the digits of a date in the form yyyy-mm-dd to 
 # the corresponding Swedish names 
-# (returns year, month and day of month in a list).
 class Whole-Date-Names_sv is export {
     has Str $.whole_date;
     has Str $.year;
     has Str $.month_number;
     has Str $.day_of_month_number;
 
-    method date-to-text {
+    # Returns day of month (Str), month (Str) and year (Int) in a list.
+    method fancy-date {
         ($!year, $!month_number, $!day_of_month_number) = split('-', $!whole_date);
         month-check $!month_number.Int;
         day-of-month-check $!day_of_month_number.Int, $!month_number.Int, $!year.Int;
-        return $!year.Int, month_name_sv($!month_number.Int), day_of_month_name_sv($!day_of_month_number.Int);
+        return day_of_month_name_sv($!day_of_month_number.Int), month_name_sv($!month_number.Int), $!year.Int;
+    }
+    
+    # Returns day of month (Int), short name of month (Str) and year (Int) in a list.
+    method formal-date {
+        ($!year, $!month_number, $!day_of_month_number) = split('-', $!whole_date);
+        month-check $!month_number.Int;
+        day-of-month-check $!day_of_month_number.Int, $!month_number.Int, $!year.Int;
+        return $!day_of_month_number.Int, @month_name_short_sv[$!month_number.Int], $!year.Int;
     }
 }
 
@@ -98,15 +111,23 @@ sub day-of-month-check (Int $dom_nr, Int $m_nr?, Int $y?) {
 
 TextDates_sv 
 
+=head1 VERSION
+
+Version: 0.1.2
+
 =head1 SYNOPSIS
 
 =begin code
 use Swedish::TextDates_sv;
 
 # Let us pretend that todays date is 2017-07-12.
-# First the date:
+# First the date (fancy):
 my $date = Whole-Date-Names_sv.new(whole_date => DateTime.now.yyyy-mm-dd);
-say $date.date-to-text; # --> (2017 juli tolfte) 
+say $date.fancy-date; # --> (tolfte juli 2017) 
+
+# Or as recommended in https://webbriktlinjer.se/66
+my $date = Whole-Date-Names_sv.new(whole_date => DateTime.now.yyyy-mm-dd);
+say $date.formal-date; # --> (12 juli 2017) 
 
 # Day of week:
 my $day = Day-Of-Week-Name_sv.new(day_of_week_number => DateTime.now.day-of-week);
@@ -133,9 +154,26 @@ K<zef install https://github.com/svekenfur/Swedish-TextDates_sv.git>
 
 See the B<SYNOPSIS> above, that is pretty much all of it.
 
+=head1 CHANGES
+
+Changes since version 0.1.1:
+
+=head3 In class Whole-Date-Names_sv:
+
+=item Method 'date-to-text' renamed to 'fancy-date'.
+=item Method 'formal-date' added.
+
+=head3 Other changes:
+
+=item Array with short names of months added.
+
 =head1 BUGS
 
 TextDates_sv has only been tested on a machine with MS Windows 7 and Rakudo 2017.04.3. To report bugs or request features, please use https://github.com/svekenfur/Swedish-TextDates_sv/issues.
+
+=head1 SEE ALSO
+
+L<https://webbriktlinjer.se/66> PTS - Vägledning för webbutveckling - Riktlinje nr 66 (Page in Swedish).
 
 =head1 AUTHOR
 
