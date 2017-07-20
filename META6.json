@@ -1,7 +1,7 @@
 {
     "perl" : "6.c",
     "name" : "Swedish::TextDates_sv",
-    "version" : "0.1.1",
+    "version" : "0.1.2",
     "description" : "Transforms a date or a day of week to the text equivalent in Swedish.",
     "authors" : [ "Sverre Furberg" ],
     "license" : "Artistic-2.0",
